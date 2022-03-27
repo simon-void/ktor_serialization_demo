@@ -1,0 +1,1 @@
+rootProject.name = "ktor_serialization_demo"
