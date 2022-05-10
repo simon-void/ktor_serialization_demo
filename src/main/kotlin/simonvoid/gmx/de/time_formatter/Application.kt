@@ -7,7 +7,7 @@ import simonvoid.gmx.de.time_formatter.plugins.configureSerialization
 
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "localhost") {
+    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         configureSerialization()
         configureRouting()
     }.start(wait = true)

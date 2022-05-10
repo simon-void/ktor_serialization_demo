@@ -1,5 +1,7 @@
 package simonvoid.gmx.de.time_formatter
 
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlin.test.*
 import io.ktor.server.testing.*
@@ -7,29 +9,29 @@ import simonvoid.gmx.de.time_formatter.plugins.configureRouting
 import simonvoid.gmx.de.time_formatter.plugins.configureSerialization
 
 class ApplicationTest {
+
     @Test
-    fun testRoot() {
-        withTestApplication({
+    fun testRoot() = testApplication {
+        application {
             configureSerialization()
             configureRouting()
-        }) {
-            handleRequest(HttpMethod.Get, "/").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("Ktor Serialisation Demo", response.content)
-            }
+        }
+        client.get("/").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("Ktor Serialisation Demo", bodyAsText())
         }
     }
 
     @Test
-    fun testConversion() {
-        withTestApplication({
+    fun testConversion() = testApplication {
+        application {
             configureSerialization()
             configureRouting()
-        }) {
-            handleRequest(HttpMethod.Post, "/format") {
-                addHeader("Content-Type", "application/json;charset=UTF-8")
-                setBody(
-                    """
+        }
+        client.post("/format") {
+            headers.append("Content-Type", "application/json;charset=UTF-8")
+            setBody(
+                """
                     {
                     "monday" : [],
                     "tuesday" : [
@@ -93,11 +95,11 @@ class ApplicationTest {
                     ]
                     }
                     """.trimIndent()
-                )
-            }.apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals(
-                    """
+            )
+        }.apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals(
+                """
                     Monday: Closed
                     Tuesday: 10 AM - 10:30 AM, 12 PM - 6 PM
                     Wednesday: Closed
@@ -106,9 +108,8 @@ class ApplicationTest {
                     Saturday: 10 AM - 1 AM
                     Sunday: 12 PM - 9 PM
                     """.trimIndent(),
-                    response.content,
-                )
-            }
+                bodyAsText(),
+            )
         }
     }
 }
