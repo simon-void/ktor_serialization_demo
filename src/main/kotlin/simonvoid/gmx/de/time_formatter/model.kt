@@ -1,7 +1,9 @@
 package simonvoid.gmx.de.time_formatter
 
+import kotlinx.serialization.Serializable
+
 @JvmInline
-@kotlinx.serialization.Serializable
+@Serializable
 value class UnixTime(private val value: Int): Comparable<UnixTime> {
     init {
         require(value in (0..86399)) {
@@ -39,7 +41,7 @@ value class UnixTime(private val value: Int): Comparable<UnixTime> {
     }
 }
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class IncomingOpeningTime(
     val type: String,
     val value: UnixTime,
@@ -48,7 +50,7 @@ data class IncomingOpeningTime(
 enum class Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
 
-    fun isFollowingDayOf(other: Weekday): Boolean = this.ordinal == (other.ordinal+1) % values().size
+    fun isFollowingDayOf(other: Weekday): Boolean = this.ordinal == (other.ordinal+1) % entries.size
 }
 
 data class OpenPeriod(

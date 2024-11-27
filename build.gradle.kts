@@ -1,9 +1,11 @@
 
 plugins {
+    val kotlinVersion = "2.0.21"
     application
-    kotlin("jvm") version Deps.kotlinVersion
-    id("org.jetbrains.kotlin.plugin.serialization") version Deps.kotlinVersion
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
+    id("io.ktor.plugin") version "3.0.1"
+//    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "simonvoid.gmx.de"
@@ -13,9 +15,8 @@ application {
 }
 
 kotlin {
-    jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
-    }
+    // uses org.gradle.java.installations.auto-download=false in gradle.properties to disable auto provisioning of JDK
+    jvmToolchain(21)
 }
 
 repositories {
@@ -23,23 +24,22 @@ repositories {
 }
 
 dependencies {
-    val ktorVersion = "2.0.1"
+    implementation("io.ktor:ktor-server-core-jvm")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
+    implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("ch.qos.logback:logback-classic:1.5.12")
 
-    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:1.2.11")
-
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${Deps.kotlinVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
+    testImplementation("io.ktor:ktor-server-test-host")
+    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
 }
 
 tasks {
-    "build" {
-        dependsOn(shadowJar)
-    }
+//    "build" {
+//        dependsOn(shadowJar)
+//    }
 
     test {
         useJUnitPlatform()
