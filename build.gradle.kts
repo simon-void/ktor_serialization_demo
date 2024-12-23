@@ -1,10 +1,10 @@
 
 plugins {
-    val kotlinVersion = "2.0.21"
+    val kotlinVersion = "2.1.0"
     application
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
-    id("io.ktor.plugin") version "3.0.1"
+    id("io.ktor.plugin") version "3.0.3"
 //    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -28,7 +28,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
-    implementation("ch.qos.logback:logback-classic:1.5.12")
+    implementation("ch.qos.logback:logback-classic:1.5.15")
 
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation(kotlin("test"))
